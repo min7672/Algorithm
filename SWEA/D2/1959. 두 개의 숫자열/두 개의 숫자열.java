@@ -1,33 +1,54 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
 
-T = int(input())
-# 여러개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
-for test_case in range(1, T + 1):
-    N,M= map(int, input().split())
-    arr_n=list(map(int, input().split()))
-    arr_m=list(map(int, input().split()))
-
-    if N>M:  #M이 무조건 큰 경우 
-        tmp=arr_n
-        arr_n=arr_m
-        arr_m=tmp
-        N=len(arr_n)
-        M=len(arr_m)
-    case_arr=[]
-    for i in range(M-N+1):
-        arr_t=arr_n.copy()
-        for j in range( i):
-            arr_t.insert(0,0)
-        for k in range(M-len(arr_t)):
-            arr_t.append(0)
-        case_arr.append(arr_t)
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int T=Integer.parseInt(br.readLine());
+		
         
-    max_result=0
-    for arr in case_arr:
-        result=0
-        for l in range(M):
-            result=result+arr[l]*arr_m[l]
-        if max_result<result:
-            max_result=result
-            
-            
-    print(f'#{test_case} {max_result}')
+		for(int test_case = 1; test_case <= T; test_case++)
+		{
+            String arrInfo[]=br.readLine().split(" ");
+            int N=Integer.parseInt(arrInfo[0]);
+            int M=Integer.parseInt(arrInfo[1]);
+            String arr1[]=br.readLine().split(" ");
+            int iarr1[]=new int[N];
+            String arr2[]=br.readLine().split(" ");
+            int iarr2[]=new int[M];
+            int result=0;
+            for(int i=0;i<N;i++){
+                iarr1[i]=Integer.parseInt(arr1[i]);
+            }
+            for(int i=0;i<M;i++){
+                iarr2[i]=Integer.parseInt(arr2[i]);
+            }
+            if(N>M){
+                for(int i =0;i<=N-M;i++){
+                    int innResult=0;
+                    for(int j=0;j<M;j++){
+                        innResult+=iarr1[j+i]*iarr2[j];
+                    }
+                    if(result<innResult){
+                        result=innResult;
+                    }                    
+                }
+            }else{
+                for(int i =0;i<=M-N;i++){
+                    int innResult=0;
+                    for(int j=0;j<N;j++){
+                        innResult+=iarr1[j]*iarr2[j+i];
+                        
+                    }
+                    if(result<innResult){
+                        result=innResult;
+                    }
+                }
+            }
+            System.out.printf("#%d %d\n",test_case,result);
+        }
+    }
+    
+}
