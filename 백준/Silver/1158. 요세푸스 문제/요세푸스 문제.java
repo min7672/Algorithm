@@ -10,7 +10,7 @@ public class Main {
     static List<Integer> arr;
     static int result[];
     static int N,K;
-
+    static BufferedWriter bw;
     public static void main(String[] args) throws IOException{
            BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
            String info[]=br.readLine().split(" ");
@@ -20,9 +20,7 @@ public class Main {
            br.close();
 
            init();
-
-           BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(System.out));
-           run(bw);
+           run();
 
            bw.flush();
            bw.close();
@@ -31,11 +29,12 @@ public class Main {
     static void init(){
         arr=new ArrayList<>();
         result=new int[N];
+        bw=new BufferedWriter(new OutputStreamWriter(System.out));
         for(int i=1;i<=N;i++){
             arr.add(i);
         }
     }
-    static void run(BufferedWriter bw) throws IOException{
+    static void run() throws IOException{
         int idx=0;
         int _idx=idx;
         int length=N;
