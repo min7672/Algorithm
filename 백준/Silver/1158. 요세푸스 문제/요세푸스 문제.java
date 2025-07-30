@@ -3,10 +3,11 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main { 
-    static int arr[];
-    static boolean used[];
+    static List<Integer> arr;
     static int result[];
 
     public static void main(String[] args) throws IOException{
@@ -33,39 +34,31 @@ public class Main {
            
     }
     static void init(int n){
-        arr=new int[n];
+        arr=new ArrayList<>();
         result=new int[n];
-        used=new boolean[n];
         for(int i=0;i<n;i++){
-            arr[i]=i+1;
+            arr.add(i+1);
         }
     }
     static void run(int n,int k){
         int idx=0;
         int _idx=idx;
         int k_cnt=k;
+        int length=n;
         for(int cnt=0;cnt<n;cnt++){
             while(k_cnt!=0){
-                _idx=(_idx)%n;
-                
-                //사용한거 pass
-                if(used[_idx]){
-                    _idx++;
-                    continue;
-                }
+                _idx=(_idx)%length;
                 
                 k_cnt--;
 
                 if(k_cnt==0){
-                    result[cnt]=arr[_idx];
-                    used[_idx]=true;
-                    
-                }
-
-                _idx++;
+                    result[cnt]=arr.get(_idx);
+                    arr.remove(_idx);
+                    length--;
+                }else _idx++;
+                
             }
             k_cnt=k;
         }
-
     }
 }
