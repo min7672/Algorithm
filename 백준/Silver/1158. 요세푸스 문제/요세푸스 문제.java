@@ -9,56 +9,43 @@ import java.util.List;
 public class Main { 
     static List<Integer> arr;
     static int result[];
+    static int N,K;
 
     public static void main(String[] args) throws IOException{
            BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
            String info[]=br.readLine().split(" ");
-           int N=Integer.parseInt(info[0]);
-           int K=Integer.parseInt(info[1]);
+           N=Integer.parseInt(info[0]);
+           K=Integer.parseInt(info[1]);
            
-            br.close();
+           br.close();
 
-           init(N);
-           run(N, K);
+           init();
 
            BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(System.out));
-           
-           bw.write("<");
-           for(int i=0;i<N-1;i++){
-                bw.write(result[i]+", ");
-           }
-           bw.write(result[N-1]+">");
+           run(bw);
 
            bw.flush();
            bw.close();
            
     }
-    static void init(int n){
+    static void init(){
         arr=new ArrayList<>();
-        result=new int[n];
-        for(int i=0;i<n;i++){
-            arr.add(i+1);
+        result=new int[N];
+        for(int i=1;i<=N;i++){
+            arr.add(i);
         }
     }
-    static void run(int n,int k){
+    static void run(BufferedWriter bw) throws IOException{
         int idx=0;
         int _idx=idx;
-        int k_cnt=k;
-        int length=n;
-        for(int cnt=0;cnt<n;cnt++){
-            while(k_cnt!=0){
-                _idx=(_idx)%length;
+        int length=N;
+        bw.write("<");
+        for(int cnt=0;cnt<N;cnt++){
+            _idx=(_idx+K-1)%length;
                 
-                k_cnt--;
-
-                if(k_cnt==0){
-                    result[cnt]=arr.get(_idx);
-                    arr.remove(_idx);
-                    length--;
-                }else _idx++;
-                
-            }
-            k_cnt=k;
+            result[cnt]=arr.get(_idx);
+            bw.write(arr.remove(_idx) + (arr.isEmpty() ? ">" : ", "));
+            length--;
         }
     }
 }
