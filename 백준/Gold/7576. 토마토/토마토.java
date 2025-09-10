@@ -1,75 +1,74 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.StringTokenizer;
 
-public class Main {
-    
-
+public class Main{
     static class Point{
-        public int x;
-        public int y;
+        public int r;
+        public int c;
         public int depth;
-        Point(int x, int y, int depth){
-            this.x=x;
-            this.y=y;
+        public Point(int r, int c, int depth){
+            this.r=r;
+            this.c=c;
             this.depth=depth;
-        }   
-
+        }
     }
-    public static void main(String[] args) throws IOException{
-        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
-        String []info=br.readLine().split(" ");
-        int M=Integer.parseInt(info[0]);
-        int N=Integer.parseInt(info[1]);
-        String []line=new String[M];
-        int arr[][]=new int[N][M];
-        Queue<Point> works=new LinkedList<>();
-        int cnt=0;
+
+    public static void main(String args[])throws IOException{
+        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st=new StringTokenizer(br.readLine());
+        int M=Integer.parseInt(st.nextToken());
+        int N=Integer.parseInt(st.nextToken());
         
+        boolean visited[][]=new boolean[N][M];
+        
+        Queue<Point> queue=new ArrayDeque<>();
+        int arr[][]=new int[N][M];
+        int visit_cnt=0;
+        int wall_cnt=0;
         for(int i=0;i<N;i++){
-            line=br.readLine().split(" ");
+            st=new StringTokenizer(br.readLine());
             for(int j=0;j<M;j++){
-                arr[i][j]=Integer.parseInt(line[j]);
-                if(arr[i][j]!=0)cnt++;
+                arr[i][j]=Integer.parseInt(st.nextToken());
+                
                 if(arr[i][j]==1){
-                    works.add(new Point(i, j, 0));
-                    
+                    queue.add(new Point(i, j, 0));
+                    visited[i][j]=true;
+                    visit_cnt++;
+                }else if(arr[i][j]==-1){
+                    wall_cnt++;
                 }
                 
             }
+            
         }
-        boolean visited[][]=new boolean[N][M];
-        int delta[][]={{1,0},{0,1},{-1,0},{0,-1}};
+        int delta[][]={{1,0},{0,1}, {-1,0},{0,-1}};
         int result=0;
 
-        
-        while(!works.isEmpty()){
-            Point cur=works.poll();
-            visited[cur.x][cur.y]=true;
+        while (!queue.isEmpty()) {
+            Point cur=queue.poll();
+            
             for(int i=0;i<4;i++){
-                int nextX=cur.x+delta[i][0];
-                int nextY=cur.y+delta[i][1];
-
-                if(nextX<0|| nextY<0 || nextX>=N||nextY>=M)continue;
-                if(visited[nextX][nextY])continue;
                 
-                if(arr[nextX][nextY]==0){
-                    cnt++;
-                    if(result<cur.depth+1)result=cur.depth+1;
+                int nextX=delta[i][0]+cur.r;
+                int nextY=delta[i][1]+cur.c;
+                if(nextX<0||nextX>=N ||nextY<0 ||nextY>=M)continue;
+                
+                if(arr[nextX][nextY]==0 && !visited[nextX][nextY]){
                     visited[nextX][nextY]=true;
-                    works.add(new Point(nextX, nextY, cur.depth+1));
+                    queue.add(new Point(nextX,nextY,cur.depth+1));
+                    visit_cnt++;
+                    result=(result<cur.depth+1)? cur.depth+1:result;
                 }
+
             }
-
+            
         }
+        result=(N*M==visit_cnt+wall_cnt)? result:-1;
+        System.out.println(result);
         
-        if(cnt!=N*M){
-            System.out.println("-1");
-        }else{
-            System.out.println(result);
-        }
-
     }
 }
