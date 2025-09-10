@@ -1,64 +1,85 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
-import java.util.Scanner;
 
-public class Main {
-    static int N, M,V;
-    static ArrayList<Integer> nodes[];
+import java.util.StringTokenizer;
+
+public class Main{
+    static ArrayList<Integer> node[];
+    static int N, M, V;
     static boolean visited[];
-    static void dfs(int a){
-        System.out.print((a+1)+" ");
-        for(int i=0;i<nodes[a].size();i++){
-            int next=nodes[a].get(i);
+    static void dfs(int x, StringBuilder sb){
+        sb.append(x).append(" ");
+        
+        for(int i=0;i<node[x].size();i++){
+            
+            int next=node[x].get(i);
+
             if(!visited[next]){
                 visited[next]=true;
-                dfs(next);
+                dfs(next,sb);
+                
+
             }
         }
+        
     }
-    static void bfs(int a){
-        visited=new boolean[N];
-        Queue<Integer> works= new ArrayDeque<>();
-        visited[a]=true;
-        works.add(a);
-        while(!works.isEmpty()){
-            int cur=works.poll();
-            System.out.print((cur+1)+" ");
+    
+    public static void main(String []args)throws IOException{
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb=new StringBuilder();
+        StringTokenizer st=new StringTokenizer(br.readLine());
+        N=Integer.parseInt(st.nextToken());
+        M=Integer.parseInt(st.nextToken());
+        V=Integer.parseInt(st.nextToken());
+        node=new ArrayList[N+1];
+        visited=new boolean[N+1];
+        for(int i=0;i<=N;i++){
+            node[i]=new ArrayList<>();
+        }
+        for(int i=0;i<M;i++){
+            st=new StringTokenizer(br.readLine());
+            int a=Integer.parseInt(st.nextToken());
+            int b=Integer.parseInt(st.nextToken());
+            node[a].add(b);
+            node[b].add(a);
+        }
+        for(int i=0;i<=N;i++){
+            node[i].sort(null);
+        }
+        
+        visited[V]=true;
+        
+        dfs(V,sb);
+        sb.deleteCharAt(sb.length()-1);
+                
+        System.out.println(sb.toString());
+        sb.setLength(0);
 
-            for(int i=0;i<nodes[cur].size();i++){
-                int next=nodes[cur].get(i);
+        Queue<Integer> queue= new ArrayDeque<>();
+        visited=new boolean[N+1];
+        queue.add(V);
+        visited[V]=true;
+        sb.append(V).append(" ");
+        while (!queue.isEmpty()) {
+            int cur=queue.poll();
+            for(int i=0;i<node[cur].size();i++){
+                int next=node[cur].get(i);
                 if(!visited[next]){
                     visited[next]=true;
-                    works.add(next);
+                    queue.add(next);
+                    sb.append(next).append(" ");
+                    
                 }
             }
         }
-    }
-    public static void main(String[] args) {
-        Scanner sc=new Scanner(System.in);
-        String info[]=sc.nextLine().split(" ");
-        N=Integer.parseInt(info[0]);
-        M=Integer.parseInt(info[1]);
-        V=Integer.parseInt(info[2])-1;
-        visited=new boolean[N];
-        nodes=new ArrayList[N];
-        for(int i=0;i<N;i++){
-            nodes[i]=new ArrayList<>();
-        }
-        for(int i=0;i<M;i++){
-            info=sc.nextLine().split(" ");
-            int a=Integer.parseInt(info[0])-1;
-            int b=Integer.parseInt(info[1])-1;
-            nodes[a].add(b);
-            nodes[b].add(a);
-        }
-        for(int i=0;i<N;i++){
-            nodes[i].sort(null);
-        }
-        visited[V]=true;
-        dfs(V);
-        System.out.println("");
-        bfs(V);
+        sb.deleteCharAt(sb.length()-1);
+        System.out.println(sb.toString());
+        
     }
 }
